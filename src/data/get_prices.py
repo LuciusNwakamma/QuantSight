@@ -16,7 +16,7 @@ def main():
         start=START,
         end=END,
         auto_adjust=False,      # keep both Close and Adj Close if available
-        group_by="column",      # <- important: prevents the 'ticker-first' layout
+        group_by="column",      # important: prevents the 'ticker-first' layout
         threads=True,
         interval="1d",
     )
