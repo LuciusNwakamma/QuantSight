@@ -16,28 +16,20 @@ def main():
         start=START,
         end=END,
         auto_adjust=False,      # keep both Close and Adj Close if available
-        group_by="column",      # important: prevents the 'ticker-first' layout
+        group_by="column",      # prevents the 'ticker-first' layout
         threads=True,
         interval="1d",
     )
 
     # Robustly select the adjusted close (fallback to Close if needed)
     if isinstance(raw.columns, pd.MultiIndex):
-        # top level names like 'Adj Close', 'Close', etc.
         top0 = raw.columns.get_level_values(0)
-        if "Adj Close" in set(top0):
-            df = raw["Adj Close"]
-        else:
-            df = raw["Close"]
+        df = raw["Adj Close"] if "Adj Close" in set(top0) else raw["Close"]
     else:
-        if "Adj Close" in raw.columns:
-            df = raw["Adj Close"]
-        else:
-            df = raw["Close"]
+        df = raw["Adj Close"] if "Adj Close" in raw.columns else raw["Close"]
 
     df.to_csv(outdir / "stock_prices.csv")
     print("Saved:", (outdir / "stock_prices.csv").resolve(), df.shape)
 
 if __name__ == "__main__":
     main()
-
